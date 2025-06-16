@@ -2,6 +2,7 @@ package com.codewithyassine.springrest.service;
 
 import com.codewithyassine.springrest.dto.TaskRequest;
 import com.codewithyassine.springrest.dto.TaskResponse;
+import com.codewithyassine.springrest.dto.UpdateTaskPriorityRequest;
 import com.codewithyassine.springrest.dto.UpdateTaskStatusRequest;
 import com.codewithyassine.springrest.exception.TaskNotFoundException;
 import com.codewithyassine.springrest.model.Task;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -24,6 +26,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setDueDate(request.getDueDate());
+        task.setPriority(request.getPriority());
         if(request.getStatus() != null){
             task.setStatus(request.getStatus());
         }else{
@@ -37,10 +40,11 @@ public class TaskServiceImpl implements TaskService {
         response.setDescription(savedTask.getDescription());
         response.setDueDate(savedTask.getDueDate());
         response.setStatus(savedTask.getStatus());
+        response.setPriority(savedTask.getPriority());
         return response;
 
     }
-
+    
     public List<TaskResponse> getAllTasks(){
         List<Task> tasks = taskRepository.findAll();
         List<TaskResponse> taskResponses = new ArrayList<>();
@@ -51,6 +55,7 @@ public class TaskServiceImpl implements TaskService {
             taskResponse.setDescription(task.getDescription());
             taskResponse.setDueDate(task.getDueDate());
             taskResponse.setStatus(task.getStatus());
+            taskResponse.setPriority(task.getPriority());
             taskResponses.add(taskResponse);
         }
         return taskResponses;
@@ -64,6 +69,7 @@ public class TaskServiceImpl implements TaskService {
         taskResponse.setDescription(task.getDescription());
         taskResponse.setDueDate(task.getDueDate());
         taskResponse.setStatus(task.getStatus());
+        taskResponse.setPriority(task.getPriority());
         return taskResponse;
     }
     public List<TaskResponse> getTasksByStatus(TaskStatus status){
@@ -76,6 +82,7 @@ public class TaskServiceImpl implements TaskService {
             taskResponse.setDescription(task.getDescription());
             taskResponse.setDueDate(task.getDueDate());
             taskResponse.setStatus(task.getStatus());
+            taskResponse.setPriority(task.getPriority());
             taskResponses.add(taskResponse);
         }
         return taskResponses;
@@ -93,12 +100,33 @@ public class TaskServiceImpl implements TaskService {
         response.setDescription(updatedTask.getDescription());
         response.setDueDate(updatedTask.getDueDate());
         response.setStatus(updatedTask.getStatus());
+        response.setPriority(updatedTask.getPriority());
 
         return response;
     }
+
     public TaskResponse deleteTask(Long id){
         Task task = taskRepository.findById(id).orElse(null);
         taskRepository.delete(task);
         return null;
     }
+    public TaskResponse updateTaskPriority(Long id, UpdateTaskPriorityRequest request) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + id));
+        task.setPriority(request.getPriority());
+        Task updated = taskRepository.save(task);
+        return mapToResponse(updated);
+    }
+    private TaskResponse mapToResponse(Task task) {
+        TaskResponse response = new TaskResponse();
+        response.setId(task.getId());
+        response.setTitle(task.getTitle());
+        response.setDescription(task.getDescription());
+        response.setDueDate(task.getDueDate());
+        response.setStatus(task.getStatus());
+        response.setPriority(task.getPriority());
+        return response;
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.codewithyassine.springrest.controller;
 import com.codewithyassine.springrest.dto.TaskRequest;
 import com.codewithyassine.springrest.dto.TaskResponse;
+import com.codewithyassine.springrest.dto.UpdateTaskPriorityRequest;
 import com.codewithyassine.springrest.dto.UpdateTaskStatusRequest;
 import com.codewithyassine.springrest.model.TaskStatus;
 import jakarta.validation.Valid;
@@ -54,12 +55,21 @@ public class TaskController {
 
     }
 
+    @PutMapping("tasks/{id}/priority")
+    public ResponseEntity<TaskResponse> updateTaskPriority(
+            @PathVariable Long id,
+            @RequestBody UpdateTaskPriorityRequest request
+    ) {
+        TaskResponse updated = taskService.updateTaskPriority(id, request);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity<TaskResponse> deleteTask(@PathVariable Long id) {
-
         TaskResponse deletedTask=taskService.deleteTask(id);
         return new ResponseEntity<>(deletedTask, HttpStatus.OK);
 
     }
+
 
 }
