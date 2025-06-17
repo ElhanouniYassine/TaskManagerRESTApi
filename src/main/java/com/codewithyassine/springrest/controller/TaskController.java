@@ -3,6 +3,7 @@ import com.codewithyassine.springrest.dto.TaskRequest;
 import com.codewithyassine.springrest.dto.TaskResponse;
 import com.codewithyassine.springrest.dto.UpdateTaskPriorityRequest;
 import com.codewithyassine.springrest.dto.UpdateTaskStatusRequest;
+import com.codewithyassine.springrest.model.TaskPriority;
 import com.codewithyassine.springrest.model.TaskStatus;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,11 @@ public class TaskController {
         TaskResponse deletedTask=taskService.deleteTask(id);
         return new ResponseEntity<>(deletedTask, HttpStatus.OK);
 
+    }
+    @GetMapping("tasks/priority/{priority}")
+    public ResponseEntity<List<TaskResponse>> getTasksByPriority(@PathVariable String priority) {
+        List<TaskResponse> tasks = taskService.getTasksByPriority(TaskPriority.valueOf(priority.toUpperCase()));
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
 

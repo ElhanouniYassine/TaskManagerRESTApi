@@ -6,6 +6,7 @@ import com.codewithyassine.springrest.dto.UpdateTaskPriorityRequest;
 import com.codewithyassine.springrest.dto.UpdateTaskStatusRequest;
 import com.codewithyassine.springrest.exception.TaskNotFoundException;
 import com.codewithyassine.springrest.model.Task;
+import com.codewithyassine.springrest.model.TaskPriority;
 import com.codewithyassine.springrest.model.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.codewithyassine.springrest.repository.TaskRepository;
@@ -87,6 +88,14 @@ public class TaskServiceImpl implements TaskService {
         }
         return taskResponses;
     }
+
+    public List<TaskResponse> getTasksByPriority(TaskPriority priority){
+        return taskRepository.findByPriority(priority)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
 
     public TaskResponse updateTaskStatus(Long id, UpdateTaskStatusRequest status){
         Task task = taskRepository.findById(id)
