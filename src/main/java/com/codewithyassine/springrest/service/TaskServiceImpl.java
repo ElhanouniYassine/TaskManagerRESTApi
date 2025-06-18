@@ -96,7 +96,21 @@ public class TaskServiceImpl implements TaskService {
                 .toList();
     }
 
-
+    public List<TaskResponse> getTasksByStatusAndPriority(TaskStatus status, TaskPriority priority){
+        List<Task> tasks=taskRepository.findByStatusAndPriority(status, priority);
+        List<TaskResponse> taskResponses = new ArrayList<>();
+        for(Task task : tasks){
+            TaskResponse taskResponse = new TaskResponse();
+            taskResponse.setId(task.getId());
+            taskResponse.setTitle(task.getTitle());
+            taskResponse.setDescription(task.getDescription());
+            taskResponse.setDueDate(task.getDueDate());
+            taskResponse.setStatus(task.getStatus());
+            taskResponse.setPriority(task.getPriority());
+            taskResponses.add(taskResponse);
+        }
+        return taskResponses;
+    }
     public TaskResponse updateTaskStatus(Long id, UpdateTaskStatusRequest status){
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException("Task with ID " + id + " not found"));

@@ -18,5 +18,6 @@ public interface TaskService {
     TaskResponse updateTaskPriority(Long id, UpdateTaskPriorityRequest priority);
     TaskResponse deleteTask(Long id);
     List<TaskResponse> getTasksByPriority(TaskPriority priority);
+    List<TaskResponse> getTasksByStatusAndPriority(TaskStatus status, TaskPriority priority);
 
 }
